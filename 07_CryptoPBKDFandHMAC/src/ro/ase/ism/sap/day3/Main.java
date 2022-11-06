@@ -1,13 +1,18 @@
 package ro.ase.ism.sap.day3;
 
 import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
 public class Main {
 
-	public static void main(String[] args) throws NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException, IOException {
+	public static void main(String[] args) throws NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException, IOException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
 
 		String password = "12345678";
 		String salt = "ismsap";
@@ -47,6 +52,23 @@ public class Main {
 		System.out.println("File sha1 hmac");
 		System.out.println(Util.getHexString(fileHmac));
 		
+		//test symmetric encryption
+		SymmetricEncryption.encryptECB("secret.txt", "passwordpassword", "AES", "secret.enc");
+		SymmetricEncryption.decryptECB("secret.enc", "passwordpassword", "AES", "secret2.txt");
+		
+		//test CBC
+		SymmetricEncryption.encryptCBC("secret.txt", "ism1pass", "DES", "secretCBC.enc");
+		SymmetricEncryption.decryptCBC("secretCBC.enc", "ism1pass", "DES", "secret3.txt");
+		
+		//test CTR
+		SymmetricEncryption.encryptCTR("secret.txt", "ism1pass", "DES", "secretCTR.enc");
+		SymmetricEncryption.decryptCTR("secretCTR.enc", "ism1pass", "DES", "secret4.txt");
+		
+		//test CTS
+		SymmetricEncryption.encryptCTS("secret.txt", "ism1pass", "DES", "secretCTS.enc");
+		SymmetricEncryption.decryptCTS("secretCTS.enc", "ism1pass", "DES", "secret5.txt");
+		
+		System.out.println("The end");
 	}
 
 }
